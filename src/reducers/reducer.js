@@ -2,10 +2,6 @@ export function reducer(state, action) {
 	switch (action.type) {
 		case "ADD_CARD": {
 			const newCard = action.payload;
-			const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-			if (urlPattern.test(newCard.image) === false) {
-				newCard.image = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
-			}
 			return { ...state, list: [newCard, ...state.list] };
 		}
 		case "DELETE_CARD": {
@@ -18,9 +14,7 @@ export function reducer(state, action) {
 				...state,
 				list: state.list.map((el) => {
 					if (el.id === id) {
-						if (image.naturalHeight === 0) {
-							el.image = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
-						}
+						el.image = image;
 						el.name = name;
 						el.location = location;
 						el.description = description;

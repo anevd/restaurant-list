@@ -22,7 +22,17 @@ function CardItem({ image, name, location, descr, rating, id }) {
 
 	return (
 		<Card className={styles.card}>
-			<CardMedia sx={{ height: 140 }} image={image} title={name} component="img" />
+			<CardMedia
+				sx={{ height: 140 }}
+				image={image}
+				title={name}
+				component="img"
+				onError={(e) => {
+					console.log(e);
+					e.target.onerror = null;
+					e.target.src = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
+				}}
+			/>
 			<CardContent>
 				<Typography variant="h5" component="div">
 					{name}
