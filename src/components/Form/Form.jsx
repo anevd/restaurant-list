@@ -7,8 +7,10 @@ import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import styles from "./form.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FormPropsTextFields() {
+	const navigate = useNavigate();
 	const { dispatch } = useContext(globalContext);
 	const [name, setName] = useState("");
 	const [image, setImage] = useState("");
@@ -34,6 +36,7 @@ export default function FormPropsTextFields() {
 		setLocation("");
 		setDescription("");
 		setRating(0);
+		navigate("/restaurant-list");
 	}
 	return (
 		<div className={styles.formPage}>
