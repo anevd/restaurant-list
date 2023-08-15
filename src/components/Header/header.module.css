@@ -1,0 +1,41 @@
+.header {
+	background-color: #1b5e20;
+	height: 100px;
+	display: flex;
+	align-items: center;
+}
+
+.header__content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header__home {
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.header__home,
+.header__item {
+	color: #fff;
+	font-size: 35px;
+	cursor: pointer;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.header__pages {
+	width: 60%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.header__item {
+	margin-left: 30px;
+	text-decoration: none;
+}
+
+.header__item:hover,
+.header__home:hover {
+	text-shadow: 0px 0px 5px #fff;
+}
