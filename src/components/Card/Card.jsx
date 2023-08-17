@@ -6,19 +6,33 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import styles from "./card.module.css";
 import { useContext } from "react";
 import { globalContext } from "../../contexts/globalContext";
 import { Link } from "react-router-dom";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
 function CardItem({ image, name, location, descr, rating, id }) {
 	const { dispatch } = useContext(globalContext);
+
 	function deleteCard(id) {
 		dispatch({
 			type: "DELETE_CARD",
 			payload: id,
 		});
 	}
+	const [open, setOpen] = React.useState(true);
+	const handleClick = () => {
+		setOpen(!open);
+	};
+	const myGeocoder = ymaps.geocode();
+	console.log(myGeocoder);
 
 	return (
 		<Card className={styles.card}>
@@ -28,7 +42,6 @@ function CardItem({ image, name, location, descr, rating, id }) {
 				title={name}
 				component="img"
 				onError={(e) => {
-					console.log(e);
 					e.target.onerror = null;
 					e.target.src = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
 				}}
@@ -37,9 +50,29 @@ function CardItem({ image, name, location, descr, rating, id }) {
 				<Typography variant="h5" component="div">
 					{name}
 				</Typography>
-				<Typography gutterBottom variant="body1">
-					{location}
-				</Typography>
+				<List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }} component="nav" aria-labelledby="nested-list-subheader">
+					<ListItemButton onClick={handleClick}>
+						<ListItemText primary={location} />
+						{open ? <ExpandLess /> : <ExpandMore />}
+					</ListItemButton>
+					<Collapse in={open} timeout="auto" unmountOnExit>
+						<List component="div" disablePadding>
+							<YMaps
+								query={{
+									apikey: "91faaa4b-1f58-467f-89c9-88b86ae97107",
+									lang: "ru_RU",
+								}}>
+								<div className={styles.map}>
+									<div className={styles.map__content}>
+										<Map id="map" modules={["geocode"]} className={styles.map__frame} defaultState={{ center: [47.386893, 8.533977], zoom: 5 }}>
+											<Placemark />
+										</Map>
+									</div>
+								</div>
+							</YMaps>
+						</List>
+					</Collapse>
+				</List>
 				<Typography gutterBottom variant="body2" color="text.secondary">
 					{descr}
 				</Typography>

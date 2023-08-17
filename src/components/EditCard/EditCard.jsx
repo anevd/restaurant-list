@@ -104,7 +104,7 @@ function Editcard() {
 							}}
 						/>
 						<Button variant="contained" type="submit" color="success">
-							Add a restaurant
+							Edit a restaurant
 						</Button>
 					</form>
 				</div>
