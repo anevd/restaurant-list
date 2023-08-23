@@ -7,10 +7,11 @@ import EditCard from "../EditCard/EditCard";
 import { globalContext as GlobalContext } from "../../contexts/globalContext";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Routes, Route } from "react-router-dom";
+import list from "../../json/restaurants";
 
 function App() {
 	const initialState = {
-		list: [],
+		list,
 	};
 	const [state, dispatch] = useLocalStorage(initialState, "plan");
 	return (

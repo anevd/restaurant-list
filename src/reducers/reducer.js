@@ -2,7 +2,7 @@ export function reducer(state, action) {
 	switch (action.type) {
 		case "ADD_CARD": {
 			const newCard = action.payload;
-			return { ...state, list: [newCard, ...state.list] };
+			return { ...state, list: [...state.list, newCard] };
 		}
 		case "DELETE_CARD": {
 			const deleteCardId = action.payload;

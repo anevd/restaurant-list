@@ -18,7 +18,7 @@ import { globalContext } from "../../contexts/globalContext";
 import { Link } from "react-router-dom";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
-function CardItem({ image, name, location, descr, rating, id }) {
+function CardItem({ image, name, location, coordinates, descr, rating, id }) {
 	const { dispatch } = useContext(globalContext);
 
 	function deleteCard(id) {
@@ -31,8 +31,11 @@ function CardItem({ image, name, location, descr, rating, id }) {
 	const handleClick = () => {
 		setOpen(!open);
 	};
-	const myGeocoder = ymaps.geocode();
-	console.log(myGeocoder);
+
+	const defaultState = {
+		center: coordinates,
+		zoom: 13,
+	};
 
 	return (
 		<Card className={styles.card}>
@@ -50,34 +53,43 @@ function CardItem({ image, name, location, descr, rating, id }) {
 				<Typography variant="h5" component="div">
 					{name}
 				</Typography>
-				<List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }} component="nav" aria-labelledby="nested-list-subheader">
-					<ListItemButton onClick={handleClick}>
-						<ListItemText primary={location} />
-						{open ? <ExpandLess /> : <ExpandMore />}
-					</ListItemButton>
-					<Collapse in={open} timeout="auto" unmountOnExit>
-						<List component="div" disablePadding>
-							<YMaps
-								query={{
-									apikey: "91faaa4b-1f58-467f-89c9-88b86ae97107",
-									lang: "ru_RU",
-								}}>
-								<div className={styles.map}>
-									<div className={styles.map__content}>
-										<Map id="map" modules={["geocode"]} className={styles.map__frame} defaultState={{ center: [47.386893, 8.533977], zoom: 5 }}>
-											<Placemark />
-										</Map>
-									</div>
-								</div>
-							</YMaps>
-						</List>
-					</Collapse>
-				</List>
-				<Typography gutterBottom variant="body2" color="text.secondary">
+
+				<Typography gutterBottom variant="body2" color="text.secondary" className={styles.card__descr}>
 					{descr}
 				</Typography>
 				<Rating name="read-only" value={rating} readOnly />
 			</CardContent>
+			<List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }} component="nav" aria-labelledby="nested-list-subheader">
+				<ListItemButton onClick={handleClick}>
+					<ListItemText primary={location} />
+					{open ? <ExpandLess /> : <ExpandMore />}
+				</ListItemButton>
+				<Collapse in={!open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<YMaps
+							query={{
+								apikey: "18380673-2021-41d5-b65f-6ec70d79eb96",
+								lang: "ru_RU",
+							}}>
+							<div className={styles.map}>
+								<div className={styles.map__content}>
+									<Map id="map" className={styles.map__frame} defaultState={defaultState}>
+										<Placemark
+											geometry={coordinates}
+											properties={{
+												iconContent: name,
+											}}
+											options={{
+												preset: "islands#oliveStretchyIcon",
+											}}
+										/>
+									</Map>
+								</div>
+							</div>
+						</YMaps>
+					</List>
+				</Collapse>
+			</List>
 			<CardActions>
 				<Link to={`/edit/${id}`}>
 					<Button size="small" color="success">

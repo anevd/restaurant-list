@@ -20,7 +20,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	height: 400px;
+	height: 1000px;
 }
 
 .form__item {
@@ -38,4 +38,9 @@
 
 .form__stars {
 	font-size: 30px;
+}
+
+.form__map {
+	width: 900px;
+	height: 600px;
 }
