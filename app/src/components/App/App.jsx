@@ -20,7 +20,7 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/add-a-restaurant" element={<Form />} />
+					<Route path="/add" element={<Form />} />
 					<Route path="/restaurant-list" element={<List />} />
 					<Route path="/edit/:id" element={<EditCard />} />
 				</Routes>

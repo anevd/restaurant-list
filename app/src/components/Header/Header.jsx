@@ -14,7 +14,7 @@ function Header() {
 						<Link to="/restaurant-list " className={styles.header__item}>
 							List of restaurants
 						</Link>
-						<Link to="/add-a-restaurant" className={styles.header__item}>
+						<Link to="/add" className={styles.header__item}>
 							Add a restaurant
 						</Link>
 					</div>

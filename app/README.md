@@ -68,3 +68,23 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+---
+
+## HTTP request
+
+GET /restaurant-list HTTP/1.1 \
+Host: localhost:3000 \
+Accept-Language: ru-RU
+
+POST /add HTTP/1.1 \
+Host: localhost:3000 \
+Accept-Language: ru-RU
+
+PUT /edit HTTP/1.1 \
+Host: localhost:3000 \
+Accept-Language: ru-RU
+
+DELETE /restaurant-list HTTP/1.1 \
+Host: localhost:3000 \
+Accept-Language: ru-RU
