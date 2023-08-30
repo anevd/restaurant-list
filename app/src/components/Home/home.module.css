@@ -1,0 +1,39 @@
+.home__about {
+	padding: 3% 0;
+}
+
+.home__content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.home__img {
+	width: 40%;
+}
+
+.home__descr {
+	width: 55%;
+	font-size: 30px;
+}
+
+.home__contact {
+	height: 200px;
+	background-color: #aac5ac;
+	display: flex;
+	align-items: center;
+}
+
+.home__contactText {
+	color: #fff;
+	font-size: 30px;
+	text-align: center;
+}
+
+.home__email {
+	color: #fff;
+	font-size: 40px;
+	text-align: center;
+	font-weight: 700;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
