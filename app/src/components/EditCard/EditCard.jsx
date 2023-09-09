@@ -22,23 +22,41 @@ function Editcard() {
 	const [newDescription, setNewDescription] = useState(currentCard.description);
 	const [newRating, setNewRating] = useState(currentCard.rating);
 
-	function handleSubmit(event) {
+	async function handleSubmit(event) {
 		event.preventDefault();
-		dispatch({
-			type: "EDIT_CARD",
-			payload: {
-				image: newImage,
-				name: newName,
-				location: newLocation,
-				description: newDescription,
-				rating: newRating,
-				id: +id,
+		const editedRestaurant = {
+			image: newImage,
+			name: newName,
+			location: newLocation,
+			description: newDescription,
+			rating: newRating,
+			id: +id,
+		};
+
+		const response = await fetch("http://localhost:4000/edit", {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
 			},
+			body: JSON.stringify(editedRestaurant),
 		});
-		navigate("/restaurant-list");
+
+		console.log(response);
+
+		if (response.status === 200) {
+			dispatch({
+				type: "EDIT_CARD",
+				payload: editedRestaurant,
+			});
+			navigate("/restaurants");
+		} else {
+			let errorType = response.status;
+			navigate(`/error/${errorType}`);
+		}
 	}
+
 	return (
-		<div className={styles.editCard}>
+		<section className={styles.editCard}>
 			<div className="container">
 				<h2 className={styles.editCard__title}>Edit a restaurant card</h2>
 				<div className={styles.editCard__content}>
@@ -109,7 +127,7 @@ function Editcard() {
 					</form>
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 }
 

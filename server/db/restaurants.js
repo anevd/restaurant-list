@@ -1,4 +1,4 @@
-const restaurants = [
+module.exports = [
 	{
 		name: "Tehnikum",
 		id: 1,
@@ -28,5 +28,3 @@ const restaurants = [
 		rating: 5,
 	},
 ];
-
-export default restaurants;

@@ -1,4 +1,4 @@
-import { list } from "./restaurants";
+import { list } from "../../../server/db/restaurants";
 import styles from "../components/Form/form.module.css";
 
 let copy = [...list];

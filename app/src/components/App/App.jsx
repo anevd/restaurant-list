@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useReducer } from "react";
 import Header from "../Header/Header";
 import Home from "../Home/Home";
 import Form from "../Form/Form";
 import List from "../List/List";
 import EditCard from "../EditCard/EditCard";
+import Error from "../Error/Error";
+import Footer from "../Footer/Footer";
 import { globalContext as GlobalContext } from "../../contexts/globalContext";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Routes, Route } from "react-router-dom";
-import list from "../../json/restaurants";
+import { reducer } from "../../reducers/reducer";
 
 function App() {
 	const initialState = {
-		list,
+		list: [],
 	};
-	const [state, dispatch] = useLocalStorage(initialState, "plan");
+
+	const [state, dispatch] = useReducer(reducer, initialState);
+
 	return (
 		<>
 			<GlobalContext.Provider value={{ state, dispatch }}>
@@ -21,9 +24,11 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/add" element={<Form />} />
-					<Route path="/restaurant-list" element={<List />} />
+					<Route path="/restaurants" element={<List />} />
 					<Route path="/edit/:id" element={<EditCard />} />
+					<Route path="/error/:errorType" element={<Error />} />
 				</Routes>
+				<Footer />
 			</GlobalContext.Provider>
 		</>
 	);

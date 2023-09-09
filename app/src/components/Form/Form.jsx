@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import styles from "./form.module.css";
 import { useNavigate } from "react-router-dom";
 import { YMaps, Map, SearchControl } from "@pbe/react-yandex-maps";
+import { notification } from "antd";
 
 export default function FormPropsTextFields() {
 	const navigate = useNavigate();
@@ -20,26 +21,55 @@ export default function FormPropsTextFields() {
 	const [rating, setRating] = React.useState(0);
 	const [coordinates, setCoordinates] = useState([]);
 
-	function handleSubmit(event) {
+	async function handleSubmit(event) {
 		event.preventDefault();
-		dispatch({
-			type: "ADD_CARD",
-			payload: {
-				name,
-				image,
-				location,
-				coordinates,
-				description,
-				rating,
-				id: Date.now(),
+		const newRestaurant = {
+			name,
+			image,
+			location,
+			coordinates,
+			description,
+			rating,
+			id: Date.now(),
+		};
+
+		const response = await fetch("http://localhost:4000/add", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
 			},
+			body: JSON.stringify(newRestaurant),
 		});
-		setName("");
-		setImage("");
-		setLocation("");
-		setDescription("");
-		setRating(0);
-		navigate("/restaurant-list");
+
+		if (response.status === 200) {
+			if (!newRestaurant.image.match(/\.(jpg|jpeg|png|gif)$/)) {
+				notification.warning({
+					message: "Your image was not found",
+					description: "Image has been replaced",
+				});
+				newRestaurant.image = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
+			} else {
+				notification.success({
+					message: "Success",
+					description: "The restaurant has been successfully added",
+				});
+			}
+			dispatch({
+				type: "ADD_CARD",
+				payload: newRestaurant,
+			});
+
+			setName("");
+			setImage("");
+			setLocation("");
+			setDescription("");
+			setRating(0);
+
+			navigate("/restaurants");
+		} else {
+			let errorType = response.status;
+			navigate(`/error/${errorType}`);
+		}
 	}
 
 	function getCoordinates(e) {
@@ -47,7 +77,7 @@ export default function FormPropsTextFields() {
 	}
 
 	return (
-		<div className={styles.formPage}>
+		<section className={styles.formPage}>
 			<div className="container">
 				<h2 className={styles.formPage__title}>Add a restaurant</h2>
 				<form className={styles.form} onSubmit={handleSubmit}>
@@ -80,6 +110,7 @@ export default function FormPropsTextFields() {
 									setLocation(event.target.value);
 								}}
 							/>
+							<h5 className={styles.form__mapTitle}>Indicate the location on the map</h5>
 							<YMaps
 								query={{
 									apikey: "91faaa4b-1f58-467f-89c9-88b86ae97107",
@@ -103,9 +134,7 @@ export default function FormPropsTextFields() {
 								}}
 								inputProps={{ maxLength: 230 }}
 							/>
-							<Typography variant="h5" className={styles.form__rating}>
-								Rating
-							</Typography>
+							<Typography variant="h5">Rating</Typography>
 							<Rating
 								name="simple-controlled"
 								value={rating}
@@ -122,6 +151,6 @@ export default function FormPropsTextFields() {
 					</div>
 				</form>
 			</div>
-		</div>
+		</section>
 	);
 }

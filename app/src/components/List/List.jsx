@@ -1,12 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styles from "./list.module.css";
 import { globalContext } from "../../contexts/globalContext";
 import Card from "../Card/Card";
 
 function List() {
-	const { state } = useContext(globalContext);
+	const { state, dispatch } = useContext(globalContext);
+
+	function getRestaurantList(restaurants) {
+		dispatch({
+			type: "GET_LIST",
+			payload: {
+				restaurants,
+			},
+		});
+	}
+	useEffect(() => {
+		fetch("http://localhost:4000/restaurants")
+			.then((res) => res.json())
+			.then((res) => getRestaurantList(res));
+	}, []);
+
 	return (
-		<div className={styles.list}>
+		<section className={styles.list}>
 			<div className="container">
 				<h2 className={styles.list__title}>List of restaurants</h2>
 				<div className={styles.list__content}>
@@ -17,7 +32,7 @@ function List() {
 					))}
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 }
 

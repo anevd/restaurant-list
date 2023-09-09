@@ -16,16 +16,28 @@ import styles from "./card.module.css";
 import { useContext } from "react";
 import { globalContext } from "../../contexts/globalContext";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
 function CardItem({ image, name, location, coordinates, descr, rating, id }) {
 	const { dispatch } = useContext(globalContext);
-
-	function deleteCard(id) {
-		dispatch({
-			type: "DELETE_CARD",
-			payload: id,
+	const navigate = useNavigate();
+	async function deleteCard(id) {
+		const response = await fetch(`http://localhost:4000/restaurants/${id}`, {
+			method: "DELETE",
 		});
+
+		if (response.status === 200) {
+			dispatch({
+				type: "DELETE_CARD",
+				payload: {
+					id,
+				},
+			});
+		} else {
+			let errorType = response.status;
+			navigate(`/error/${errorType}`);
+		}
 	}
 	const [open, setOpen] = React.useState(true);
 	const handleClick = () => {
@@ -39,16 +51,7 @@ function CardItem({ image, name, location, coordinates, descr, rating, id }) {
 
 	return (
 		<Card className={styles.card}>
-			<CardMedia
-				sx={{ height: 140 }}
-				image={image}
-				title={name}
-				component="img"
-				onError={(e) => {
-					e.target.onerror = null;
-					e.target.src = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
-				}}
-			/>
+			<CardMedia sx={{ height: 140 }} image={image} title={name} component="img" />
 			<CardContent>
 				<Typography variant="h5" component="div">
 					{name}

@@ -31,9 +31,10 @@
 	width: 100%;
 	font-size: 20px;
 }
-
-.form__rating {
-	font-size: 20px;
+.form__mapTitle {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 500;
 }
 
 .form__stars {

@@ -1,12 +1,21 @@
 export function reducer(state, action) {
 	switch (action.type) {
+		case "GET_LIST": {
+			const { restaurants } = action.payload;
+			return { ...state, list: restaurants };
+		}
 		case "ADD_CARD": {
 			const newCard = action.payload;
 			return { ...state, list: [...state.list, newCard] };
 		}
 		case "DELETE_CARD": {
-			const deleteCardId = action.payload;
-			return { ...state, list: state.list.filter((el) => el.id !== deleteCardId) };
+			const { id } = action.payload;
+			return {
+				...state,
+				list: state.list.filter((el) => {
+					return el.id !== id;
+				}),
+			};
 		}
 		case "EDIT_CARD": {
 			let { image, name, location, description, rating, id } = action.payload;

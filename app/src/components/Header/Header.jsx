@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 
 function Header() {
 	return (
-		<div className={styles.header}>
+		<header className={styles.header}>
 			<div className="container">
 				<div className={styles.header__content}>
 					<Link to="/" className={styles.header__home}>
 						Restaurant service
 					</Link>
 					<div className={styles.header__pages}>
-						<Link to="/restaurant-list " className={styles.header__item}>
+						<Link to="/restaurants " className={styles.header__item}>
 							List of restaurants
 						</Link>
 						<Link to="/add" className={styles.header__item}>
@@ -20,7 +20,7 @@ function Header() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</header>
 	);
 }
 
