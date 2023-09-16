@@ -1,4 +1,5 @@
 import * as React from "react";
+import axios from "axios";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,30 +14,31 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import styles from "./card.module.css";
-import { useContext } from "react";
-import { globalContext } from "../../contexts/globalContext";
+import { useDispatch } from "react-redux";
+import { deleteCardAC } from "../../store/actions/mainActions";
+import { notification } from "antd";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
 function CardItem({ image, name, location, coordinates, descr, rating, id }) {
-	const { dispatch } = useContext(globalContext);
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	async function deleteCard(id) {
-		const response = await fetch(`http://localhost:4000/restaurants/${id}`, {
-			method: "DELETE",
-		});
-
-		if (response.status === 200) {
-			dispatch({
-				type: "DELETE_CARD",
-				payload: {
-					id,
-				},
+		try {
+			const response = await axios.delete(`http://localhost:4000/restaurants/${id}`);
+			if (response.status === 200) {
+				dispatch(deleteCardAC(id));
+			} else {
+				let errorType = response.status;
+				navigate(`/error/${errorType}`);
+				throw new Error("error");
+			}
+		} catch (error) {
+			notification.error({
+				message: "Error",
+				description: error.message,
 			});
-		} else {
-			let errorType = response.status;
-			navigate(`/error/${errorType}`);
 		}
 	}
 	const [open, setOpen] = React.useState(true);

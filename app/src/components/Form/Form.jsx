@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useContext } from "react";
-import { globalContext } from "../../contexts/globalContext";
 import { useState } from "react";
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
@@ -10,10 +9,12 @@ import styles from "./form.module.css";
 import { useNavigate } from "react-router-dom";
 import { YMaps, Map, SearchControl } from "@pbe/react-yandex-maps";
 import { notification } from "antd";
+import { useDispatch } from "react-redux";
+import { deleteCardAC } from "../../store/actions/mainActions";
 
 export default function FormPropsTextFields() {
 	const navigate = useNavigate();
-	const { dispatch } = useContext(globalContext);
+	const dispatch = useDispatch();
 	const [name, setName] = useState("");
 	const [image, setImage] = useState("");
 	const [description, setDescription] = useState("");
@@ -22,53 +23,52 @@ export default function FormPropsTextFields() {
 	const [coordinates, setCoordinates] = useState([]);
 
 	async function handleSubmit(event) {
-		event.preventDefault();
-		const newRestaurant = {
-			name,
-			image,
-			location,
-			coordinates,
-			description,
-			rating,
-			id: Date.now(),
-		};
+		try {
+			event.preventDefault();
+			const newRestaurant = {
+				name,
+				image,
+				location,
+				coordinates,
+				description,
+				rating,
+				id: Date.now(),
+			};
 
-		const response = await fetch("http://localhost:4000/add", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json;charset=utf-8",
-			},
-			body: JSON.stringify(newRestaurant),
-		});
+			const response = await axios.post("http://localhost:4000/add", newRestaurant);
 
-		if (response.status === 200) {
-			if (!newRestaurant.image.match(/\.(jpg|jpeg|png|gif)$/)) {
-				notification.warning({
-					message: "Your image was not found",
-					description: "Image has been replaced",
-				});
-				newRestaurant.image = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
+			if (response.status === 200) {
+				if (!newRestaurant.image.match(/\.(jpg|jpeg|png|gif)$/)) {
+					notification.warning({
+						message: "Your image was not found",
+						description: "Image has been replaced",
+					});
+					newRestaurant.image = "https://gas-kvas.com/uploads/posts/2023-02/1676439541_gas-kvas-com-p-risunok-detskoe-kafe-6.jpg";
+				} else {
+					notification.success({
+						message: "Success",
+						description: "The restaurant has been successfully added",
+					});
+				}
+				dispatch(deleteCardAC(newRestaurant));
+
+				setName("");
+				setImage("");
+				setLocation("");
+				setDescription("");
+				setRating(0);
+
+				navigate("/restaurants");
 			} else {
-				notification.success({
-					message: "Success",
-					description: "The restaurant has been successfully added",
-				});
+				let errorType = response.status;
+				navigate(`/error/${errorType}`);
+				throw new Error("error");
 			}
-			dispatch({
-				type: "ADD_CARD",
-				payload: newRestaurant,
+		} catch (error) {
+			notification.error({
+				message: "Error",
+				description: error.message,
 			});
-
-			setName("");
-			setImage("");
-			setLocation("");
-			setDescription("");
-			setRating(0);
-
-			navigate("/restaurants");
-		} else {
-			let errorType = response.status;
-			navigate(`/error/${errorType}`);
 		}
 	}
 

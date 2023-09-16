@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { globalContext } from "../../contexts/globalContext";
+import React, { useState } from "react";
+import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
@@ -10,12 +10,16 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import styles from "./editCard.module.css";
 import stylesCard from "../Card/card.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { editCardAC } from "../../store/actions/mainActions";
+import { notification } from "antd";
 
 function Editcard() {
+	const dispatch = useDispatch();
+	const { list } = useSelector((store) => store.mainStore);
 	const navigate = useNavigate();
-	const { state, dispatch } = useContext(globalContext);
 	const { id } = useParams();
-	const currentCard = state.list.find((el) => el.id === +id);
+	const currentCard = list.find((el) => el.id === +id);
 	const [newImage, setNewImage] = useState(currentCard.image);
 	const [newName, setNewName] = useState(currentCard.name);
 	const [newLocation, setNewLocation] = useState(currentCard.location);
@@ -23,35 +27,30 @@ function Editcard() {
 	const [newRating, setNewRating] = useState(currentCard.rating);
 
 	async function handleSubmit(event) {
-		event.preventDefault();
-		const editedRestaurant = {
-			image: newImage,
-			name: newName,
-			location: newLocation,
-			description: newDescription,
-			rating: newRating,
-			id: +id,
-		};
-
-		const response = await fetch("http://localhost:4000/edit", {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json;charset=utf-8",
-			},
-			body: JSON.stringify(editedRestaurant),
-		});
-
-		console.log(response);
-
-		if (response.status === 200) {
-			dispatch({
-				type: "EDIT_CARD",
-				payload: editedRestaurant,
+		try {
+			event.preventDefault();
+			const editedRestaurant = {
+				image: newImage,
+				name: newName,
+				location: newLocation,
+				description: newDescription,
+				rating: newRating,
+				id: +id,
+			};
+			const response = await axios.put("http://localhost:4000/edit", editedRestaurant);
+			if (response.status === 200) {
+				dispatch(editCardAC(editedRestaurant));
+				navigate("/restaurants");
+			} else {
+				let errorType = response.status;
+				navigate(`/error/${errorType}`);
+				throw new Error("error");
+			}
+		} catch (error) {
+			notification.error({
+				message: "Error",
+				description: error.message,
 			});
-			navigate("/restaurants");
-		} else {
-			let errorType = response.status;
-			navigate(`/error/${errorType}`);
 		}
 	}
 

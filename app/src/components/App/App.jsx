@@ -1,4 +1,6 @@
 import React, { useReducer } from "react";
+import { Provider } from "react-redux";
+import store from "../../store/store";
 import Header from "../Header/Header";
 import Home from "../Home/Home";
 import Form from "../Form/Form";
@@ -6,20 +8,12 @@ import List from "../List/List";
 import EditCard from "../EditCard/EditCard";
 import Error from "../Error/Error";
 import Footer from "../Footer/Footer";
-import { globalContext as GlobalContext } from "../../contexts/globalContext";
 import { Routes, Route } from "react-router-dom";
-import { reducer } from "../../reducers/reducer";
 
 function App() {
-	const initialState = {
-		list: [],
-	};
-
-	const [state, dispatch] = useReducer(reducer, initialState);
-
 	return (
 		<>
-			<GlobalContext.Provider value={{ state, dispatch }}>
+			<Provider store={store}>
 				<Header />
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -29,7 +23,7 @@ function App() {
 					<Route path="/error/:errorType" element={<Error />} />
 				</Routes>
 				<Footer />
-			</GlobalContext.Provider>
+			</Provider>
 		</>
 	);
 }
